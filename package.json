@@ -1,0 +1,27 @@
+{
+  "name": "@opensverige/career-alchemist-mcp",
+  "version": "1.0.0",
+  "description": "MCP server för att hitta dolda jobbmöjligheter på den svenska arbetsmarknaden via Brave Search",
+  "main": "dist/index.js",
+  "bin": {
+    "career-alchemist-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
