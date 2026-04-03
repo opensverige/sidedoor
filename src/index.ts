@@ -25,7 +25,7 @@ if (!process.env.BRAVE_API_KEY) {
 }
 
 const server = new Server(
-  { name: "career-alchemist", version: "1.0.0" },
+  { name: "sidedoor", version: "1.0.0" },
   { capabilities: { tools: {}, resources: {} } }
 );
 

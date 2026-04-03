@@ -1,12 +1,15 @@
 {
-  "name": "@opensverige/career-alchemist-mcp",
+  "name": "@opensverige/sidedoor",
   "version": "1.0.0",
   "description": "MCP server för att hitta dolda jobbmöjligheter på den svenska arbetsmarknaden via Brave Search",
   "main": "dist/index.js",
   "bin": {
-    "career-alchemist-mcp": "dist/index.js"
+    "sidedoor": "dist/index.js"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -17,8 +20,8 @@
     "axios": "^1.7.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
   },
   "engines": {
     "node": ">=18"

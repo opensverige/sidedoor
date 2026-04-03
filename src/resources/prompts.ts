@@ -1,4 +1,4 @@
-export const INTERVIEW_PROMPT_URI = "career-alchemist://prompts/interview";
+export const INTERVIEW_PROMPT_URI = "sidedoor://prompts/interview";
 
 export const INTERVIEW_PROMPT_TEXT = `Du är en karriärnavigator för den dolda svenska arbetsmarknaden.
 Bolag som behöver någon som kandidaten — men ännu inte publicerat en annons.

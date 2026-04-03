@@ -1,4 +1,4 @@
-# Career Alchemist MCP
+# Sidedoor MCP
 
 Hitta dolda jobbmöjligheter på den svenska arbetsmarknaden via Claude Desktop.
 
@@ -11,7 +11,7 @@ Hitta dolda jobbmöjligheter på den svenska arbetsmarknaden via Claude Desktop.
 ## Installation
 
 ```bash
-npm install -g @opensverige/career-alchemist-mcp
+npm install -g @opensverige/sidedoor
 ```
 
 ## Konfigurera Claude Desktop
@@ -25,8 +25,8 @@ Lägg till:
 ```json
 {
   "mcpServers": {
-    "career-alchemist": {
-      "command": "career-alchemist-mcp",
+    "sidedoor": {
+      "command": "sidedoor",
       "env": {
         "BRAVE_API_KEY": "din-nyckel-här"
       }
@@ -47,7 +47,7 @@ Starta om Claude Desktop. Skriv **"Starta karriärintervjun"** i ett nytt samtal
 
 ## Systemresurs
 
-`career-alchemist://prompts/interview` — Laddar karriärintervju-prompten automatiskt i Claude Desktop.
+`sidedoor://prompts/interview` — Laddar karriärintervju-prompten automatiskt i Claude Desktop.
 
 ## Validering
 
