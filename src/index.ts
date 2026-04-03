@@ -84,11 +84,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     let result: unknown;
 
     if (name === "search_companies") {
-      result = await searchCompanies(args as any);
+      const a = args as Record<string, string | undefined>;
+      if (!a.sector || !a.location) throw new Error("search_companies kräver 'sector' och 'location'");
+      result = await searchCompanies({ sector: a.sector, location: a.location, signals: a.signals });
     } else if (name === "get_company_details") {
-      result = await getCompanyDetails(args as any);
+      const a = args as Record<string, string | undefined>;
+      if (!a.company_name) throw new Error("get_company_details kräver 'company_name'");
+      result = await getCompanyDetails({ company_name: a.company_name, org_nr: a.org_nr });
     } else if (name === "get_contact_strategy") {
-      result = await getContactStrategy(args as any);
+      const a = args as Record<string, string | undefined>;
+      if (!a.company_name || !a.contact_type) throw new Error("get_contact_strategy kräver 'company_name' och 'contact_type'");
+      result = await getContactStrategy({
+        company_name: a.company_name,
+        contact_type: a.contact_type as "vd" | "grundare" | "hr" | "alla"
+      });
     } else {
       throw new Error(`Okänt verktyg: ${name}`);
     }
