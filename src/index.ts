@@ -7,13 +7,15 @@ import {
   ListToolsRequestSchema,
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { searchCompanies } from "./tools/search.js";
 import { getCompanyDetails } from "./tools/details.js";
 import { getContactStrategy } from "./tools/strategy.js";
 import { getOfficeLocation } from "./tools/office.js";
-import { INTERVIEW_PROMPT_RESOURCE, INTERVIEW_PROMPT_URI } from "./resources/prompts.js";
+import { INTERVIEW_PROMPT_RESOURCE, INTERVIEW_PROMPT_URI, INTERVIEW_PROMPT_TEXT } from "./resources/prompts.js";
 
 // Validate API key at startup
 if (!process.env.BRAVE_API_KEY) {
@@ -27,8 +29,37 @@ if (!process.env.BRAVE_API_KEY) {
 
 const server = new Server(
   { name: "sidedoor", version: "1.0.0" },
-  { capabilities: { tools: {}, resources: {} } }
+  { capabilities: { tools: {}, resources: {}, prompts: {} } }
 );
+
+// List prompts — visas som slash-kommandon i Claude Desktop
+server.setRequestHandler(ListPromptsRequestSchema, async () => ({
+  prompts: [
+    {
+      name: "starta-karriarintervjun",
+      description: "Starta Sidedoor-intervjun — djup kartläggning + ärlig poängsättning av bolag"
+    }
+  ]
+}));
+
+// Get prompt — returnerar intervju-instruktionerna direkt till Claude
+server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  if (request.params.name === "starta-karriarintervjun") {
+    return {
+      description: "Sidedoor karriärintervju",
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: INTERVIEW_PROMPT_TEXT
+          }
+        }
+      ]
+    };
+  }
+  throw new Error(`Okänd prompt: ${request.params.name}`);
+});
 
 // List tools
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
