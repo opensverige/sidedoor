@@ -12,6 +12,7 @@ import {
 import { searchCompanies } from "./tools/search.js";
 import { getCompanyDetails } from "./tools/details.js";
 import { getContactStrategy } from "./tools/strategy.js";
+import { getOfficeLocation } from "./tools/office.js";
 import { INTERVIEW_PROMPT_RESOURCE, INTERVIEW_PROMPT_URI } from "./resources/prompts.js";
 
 // Validate API key at startup
@@ -40,7 +41,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         properties: {
           sector: { type: "string", description: "Sektor, t.ex. 'fintech', 'cleantech', 'SaaS B2B'" },
           location: { type: "string", description: "Stad, t.ex. 'Stockholm', 'Göteborg'" },
-          signals: { type: "string", description: "Tillväxtsignaler, t.ex. 'nyemission scale-up'" }
+          signals: { type: "string", description: "Tillväxtsignaler, t.ex. 'nyemission scale-up'" },
+          radius_km: { type: "number", description: "Sökradie i km från hemadress, t.ex. 20" }
         },
         required: ["sector", "location"]
       }
@@ -72,6 +74,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         },
         required: ["company_name", "contact_type"]
       }
+    },
+    {
+      name: "get_office_location",
+      description: "Hitta fysisk besöksadress till ett bolags kontor — för guerilla-besök",
+      inputSchema: {
+        type: "object",
+        properties: {
+          company_name: { type: "string", description: "Bolagets namn" },
+          city: { type: "string", description: "Stad att söka i" }
+        },
+        required: ["company_name", "city"]
+      }
     }
   ]
 }));
@@ -84,9 +98,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     let result: unknown;
 
     if (name === "search_companies") {
-      const a = args as Record<string, string | undefined>;
+      const a = args as Record<string, string | number | undefined>;
       if (!a.sector || !a.location) throw new Error("search_companies kräver 'sector' och 'location'");
-      result = await searchCompanies({ sector: a.sector, location: a.location, signals: a.signals });
+      result = await searchCompanies({
+        sector: String(a.sector),
+        location: String(a.location),
+        signals: a.signals ? String(a.signals) : undefined,
+        radius_km: a.radius_km ? Number(a.radius_km) : undefined
+      });
     } else if (name === "get_company_details") {
       const a = args as Record<string, string | undefined>;
       if (!a.company_name) throw new Error("get_company_details kräver 'company_name'");
@@ -98,6 +117,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         company_name: a.company_name,
         contact_type: a.contact_type as "vd" | "grundare" | "hr" | "alla"
       });
+    } else if (name === "get_office_location") {
+      const a = args as Record<string, string | undefined>;
+      if (!a.company_name || !a.city) throw new Error("get_office_location kräver 'company_name' och 'city'");
+      result = await getOfficeLocation({ company_name: a.company_name, city: a.city });
     } else {
       throw new Error(`Okänt verktyg: ${name}`);
     }

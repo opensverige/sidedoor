@@ -4,6 +4,7 @@ export interface SearchCompaniesInput {
   sector: string;
   location: string;
   signals?: string;
+  radius_km?: number;
 }
 
 export interface SearchCompaniesOutput {
@@ -12,8 +13,9 @@ export interface SearchCompaniesOutput {
 }
 
 export async function searchCompanies(input: SearchCompaniesInput): Promise<SearchCompaniesOutput> {
-  const { sector, location, signals } = input;
-  const query = `${sector} bolag ${location} ${signals ?? "tillväxt"} 2024 2025`;
+  const { sector, location, signals, radius_km } = input;
+  const radiusSuffix = radius_km ? ` inom ${radius_km}km` : "";
+  const query = `${sector} bolag kontor ${location}${radiusSuffix} ${signals ?? "tillväxt"} 2024 2025`;
   const results = await braveSearch(query, 8);
   return { query_used: query, results };
 }
